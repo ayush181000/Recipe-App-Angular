@@ -8,22 +8,7 @@ import { Recipe } from './recipe.model';
 @Injectable()
 export class RecipeService {
   recipesChanges = new Subject<Recipe[]>();
-
   private recipes: Recipe[] = [];
-  // private recipes: Recipe[] = [
-  //   new Recipe(
-  //     'Tasty Schnitzel',
-  //     'This is simply a test',
-  //     'https://live.staticflickr.com/7423/28115954606_5a068f9d36_b.jpg',
-  //     [new Ingredient('Meat', 1), new Ingredient('French Fries', 20)]
-  //   ),
-  //   new Recipe(
-  //     'Big Fat Burger',
-  //     'This is simply a test',
-  //     'https://live.staticflickr.com/7423/28115954606_5a068f9d36_b.jpg',
-  //     [new Ingredient('Buns', 2), new Ingredient('Meat', 1)]
-  //   ),
-  // ];
 
   constructor(private slService: ShoppingListService) {}
 
@@ -59,3 +44,18 @@ export class RecipeService {
     this.recipesChanges.next(this.recipes.slice());
   }
 }
+
+// private recipes: Recipe[] = [
+//   new Recipe(
+//     'Tasty Schnitzel',
+//     'This is simply a test',
+//     'https://live.staticflickr.com/7423/28115954606_5a068f9d36_b.jpg',
+//     [new Ingredient('Meat', 1), new Ingredient('French Fries', 20)]
+//   ),
+//   new Recipe(
+//     'Big Fat Burger',
+//     'This is simply a test',
+//     'https://live.staticflickr.com/7423/28115954606_5a068f9d36_b.jpg',
+//     [new Ingredient('Buns', 2), new Ingredient('Meat', 1)]
+//   ),
+// ];
