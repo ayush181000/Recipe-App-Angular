@@ -34,44 +34,6 @@ export class AuthService {
     console.log(enviornment.firebaseAPIKey);
   }
 
-  signup(email: string, password: string) {
-    return this.http
-      .post<AuthResponseData>(
-        `https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=${enviornment.firebaseAPIKey}`,
-        { email, password, returnSecureToken: true }
-      )
-      .pipe(
-        catchError(this.handleError),
-        tap((resData) =>
-          this.handleAuthentication(
-            resData.email,
-            resData.localId,
-            resData.idToken,
-            +resData.expiresIn
-          )
-        )
-      );
-  }
-
-  login(email: string, password: string) {
-    return this.http
-      .post<AuthResponseData>(
-        `https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${enviornment.firebaseAPIKey}`,
-        { email, password, returnSecureToken: true }
-      )
-      .pipe(
-        catchError(this.handleError),
-        tap((resData) =>
-          this.handleAuthentication(
-            resData.email,
-            resData.localId,
-            resData.idToken,
-            +resData.expiresIn
-          )
-        )
-      );
-  }
-
   autoLogin() {
     const userData: {
       email: string;
@@ -93,7 +55,7 @@ export class AuthService {
     if (loadedUser.token) {
       // this.user.next(loadedUser);
       this.store.dispatch(
-        new AuthActions.Login({
+        new AuthActions.AuthenticateSuccess({
           email: loadedUser.email,
           userId: loadedUser.id,
           token: loadedUser.token,
@@ -107,20 +69,9 @@ export class AuthService {
     }
   }
 
-  logout() {
-    // this.user.next(null);
-    this.store.dispatch(new AuthActions.Logout());
-    this.router.navigate(['/auth']);
-    localStorage.removeItem('userData');
-    if (this.tokenExpirationTimer) {
-      clearTimeout(this.tokenExpirationTimer);
-    }
-    this.tokenExpirationTimer = null;
-  }
-
   autoLogout(expirationDuration: number) {
     this.tokenExpirationTimer = setTimeout(() => {
-      this.logout();
+      this.store.dispatch(new AuthActions.Logout());
     }, expirationDuration);
   }
 
@@ -137,7 +88,7 @@ export class AuthService {
       new Date(new Date().getTime() + expiresIn * 1000)
     );
     this.store.dispatch(
-      new AuthActions.Login({
+      new AuthActions.AuthenticateSuccess({
         email,
         userId,
         token,
@@ -149,7 +100,7 @@ export class AuthService {
   }
 
   private handleError(errorRes: HttpErrorResponse) {
-    console.log(errorRes);
+    // console.log(errorRes);
     let errorMessage = 'An unkonwn error occurred!';
     if (errorRes.error && errorRes.error.error) {
       switch (errorRes.error.error.message) {
