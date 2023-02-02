@@ -9,55 +9,9 @@ import * as fromApp from '../app.reducer';
 
 @Injectable()
 export class RecipeService {
-  recipesChanges = new Subject<Recipe[]>();
-  private recipes: Recipe[] = [];
-
   constructor(private store: Store<fromApp.AppState>) {}
-
-  setRecipes(recipes: Recipe[]) {
-    this.recipes = recipes;
-    this.recipesChanges.next(this.recipes.slice());
-  }
-
-  getRecipes() {
-    return this.recipes.slice();
-  }
 
   addIngredientsToShoppingList(ingredients: Ingredient[]) {
     this.store.dispatch(new ShoppingListActions.AddIngredients(ingredients));
   }
-
-  getRecipe(index: number) {
-    return this.recipes[index];
-  }
-
-  addRecipe(recipe: Recipe) {
-    this.recipes.push(recipe);
-    this.recipesChanges.next(this.recipes.slice());
-  }
-
-  updateRecipe(index: number, newRecipe: Recipe) {
-    this.recipes[index] = newRecipe;
-    this.recipesChanges.next(this.recipes.slice());
-  }
-
-  deleteRecipe(index: number) {
-    this.recipes.splice(index, 1);
-    this.recipesChanges.next(this.recipes.slice());
-  }
 }
-
-// private recipes: Recipe[] = [
-//   new Recipe(
-//     'Tasty Schnitzel',
-//     'This is simply a test',
-//     'https://live.staticflickr.com/7423/28115954606_5a068f9d36_b.jpg',
-//     [new Ingredient('Meat', 1), new Ingredient('French Fries', 20)]
-//   ),
-//   new Recipe(
-//     'Big Fat Burger',
-//     'This is simply a test',
-//     'https://live.staticflickr.com/7423/28115954606_5a068f9d36_b.jpg',
-//     [new Ingredient('Buns', 2), new Ingredient('Meat', 1)]
-//   ),
-// ];
